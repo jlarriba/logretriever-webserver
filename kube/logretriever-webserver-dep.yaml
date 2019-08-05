@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logretriever-webserver
+  namespace: logging-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logretriever-webserver
+  template:
+    metadata:
+      labels:
+        app: logretriever-webserver
+    spec:
+      containers:
+      - name: logretriever-webserver
+        image: jlarriba/logretriever-webserver
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        volumeMounts:
+        - name: optlogs
+          mountPath: /opt/logs
+      volumes:
+        - name: optlogs
+          persistentVolumeClaim:
+            claimName: logretriever
